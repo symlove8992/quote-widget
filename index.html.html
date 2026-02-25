@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 명언</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow: hidden;
+  }
+
+  .bg-accent {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,160,96,0.07) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  .bg-accent2 {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(100,140,220,0.05) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 680px;
+    width: 90%;
+    padding: 48px 0;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #b09050;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, #d4b070, transparent);
+    margin-bottom: 32px;
+  }
+
+  .quote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(17px, 3vw, 24px);
+    font-weight: 400;
+    line-height: 1.9;
+    color: #1a1a1a;
+    letter-spacing: 0.02em;
+    margin-bottom: 36px;
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .quote::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg, #c4a060, rgba(196,160,96,0.1));
+  }
+
+  .author {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: #999080;
+    letter-spacing: 1px;
+    padding-left: 24px;
+  }
+
+  .author span {
+    color: #b09050;
+    margin-right: 8px;
+  }
+
+  .date-badge {
+    margin-top: 48px;
+    padding-left: 24px;
+    font-size: 11px;
+    color: #cccccc;
+    letter-spacing: 2px;
+    font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-accent"></div>
+<div class="bg-accent2"></div>
+
+<div class="container">
+  <div class="label">오늘의 명언</div>
+  <div class="divider"></div>
+  <div class="quote" id="quote-text"></div>
+  <div class="author"><span>—</span><span id="quote-author"></span></div>
+  <div class="date-badge" id="today-date"></div>
+</div>
+
+<script>
+const quotes = [
+  { text: "리더는 희망을 파는 사람이다.", author: "나폴레옹 보나파르트" },
+  { text: "성공은 열정을 잃지 않고 실패에서 실패로 걸어가는 것이다.", author: "윈스턴 처칠" },
+  { text: "당신이 할 수 있다고 생각하든, 할 수 없다고 생각하든 당신의 생각이 맞다.", author: "헨리 포드" },
+  { text: "가장 큰 위험은 위험을 감수하지 않는 것이다.", author: "마크 저커버그" },
+  { text: "지식에 투자하는 것이 가장 높은 이자를 준다.", author: "벤저민 프랭클린" },
+  { text: "혁신은 리더와 추종자를 구별한다.", author: "스티브 잡스" },
+  { text: "시작하기 위해 위대할 필요는 없지만, 위대해지기 위해서는 시작해야 한다.", author: "지그 지글러" },
+  { text: "실패는 단지 다시 시작할 기회일 뿐이다. 이번엔 더 영리하게.", author: "헨리 포드" },
+  { text: "당신이 집중하는 것이 확장된다.", author: "오프라 윈프리" },
+  { text: "목표가 없는 사람은 목표가 있는 사람을 위해 일하게 된다.", author: "브라이언 트레이시" },
+  { text: "사람들은 당신이 한 말은 잊어버리지만, 당신이 느끼게 해준 감정은 절대 잊지 않는다.", author: "마야 안젤루" },
+  { text: "인생에서 가장 큰 영광은 한 번도 넘어지지 않는 데 있지 않고, 넘어질 때마다 일어서는 데 있다.", author: "넬슨 만델라" },
+  { text: "단순함은 궁극의 정교함이다.", author: "레오나르도 다 빈치" },
+  { text: "탁월함은 습관이다.", author: "아리스토텔레스" },
+  { text: "세상에서 가장 어려운 일은 자신을 아는 것이고, 가장 쉬운 일은 남을 충고하는 것이다.", author: "탈레스" },
+  { text: "나는 내 인생의 감독이다. 나쁜 배우들을 쫓아낼 권리가 있다.", author: "스티브 잡스" },
+  { text: "시간을 지배하는 자가 인생을 지배한다.", author: "피터 드러커" },
+  { text: "전략 없는 실행은 실패 전의 소음일 뿐이다.", author: "썬 쯔" },
+  { text: "최고의 투자는 자기 자신에게 하는 투자다.", author: "워런 버핏" },
+  { text: "위대한 성취는 모두 불가능해 보였을 때 시작되었다.", author: "넬슨 만델라" },
+  { text: "당신의 시간은 한정되어 있다. 그러니 다른 사람의 삶을 사느라 그 시간을 낭비하지 마라.", author: "스티브 잡스" },
+  { text: "부자가 되는 것은 꿈이 아니라 계획이다.", author: "로버트 기요사키" },
+  { text: "진정한 리더십은 직함에서 오지 않는다.", author: "켄 블랜처드" },
+  { text: "변화를 두려워하는 자는 성장을 포기한 자다.", author: "피터 드러커" },
+  { text: "아이디어는 행동 없이는 아무런 가치가 없다.", author: "토머스 에디슨" },
+  { text: "기회는 준비된 자에게만 찾아온다.", author: "루이 파스퇴르" },
+  { text: "성공은 매일의 작은 노력들이 쌓인 결과다.", author: "로버트 콜리어" },
+  { text: "고객을 행복하게 하라. 그러면 그들이 당신을 행복하게 할 것이다.", author: "제프 베조스" },
+  { text: "브랜드는 더 이상 기업이 소비자에게 말하는 것이 아니다. 소비자들이 서로에게 말하는 것이다.", author: "스콧 쿡" },
+  { text: "팀워크는 꿈을 현실로 만든다.", author: "존 맥스웰" },
+  { text: "뛰어난 사람을 고용하고 그들이 일할 수 있도록 비켜서라.", author: "스티브 잡스" },
+  { text: "문화는 전략을 아침으로 먹는다.", author: "피터 드러커" },
+  { text: "위기는 위험과 기회로 이루어져 있다.", author: "존 F. 케네디" },
+  { text: "당신이 하는 일을 사랑하지 않는다면 절대로 성공할 수 없다.", author: "워런 버핏" },
+  { text: "배움을 멈추면 성장도 멈춘다.", author: "벤저민 프랭클린" },
+  { text: "인생은 자전거 타기와 같다. 균형을 잡으려면 계속 움직여야 한다.", author: "알베르트 아인슈타인" },
+  { text: "두려움이 당신을 지배하게 두지 마라. 두려움을 정복한 자만이 진정으로 자유롭다.", author: "넬슨 만델라" },
+  { text: "현재에 집중하라. 과거는 이미 지나갔고 미래는 아직 오지 않았다.", author: "달라이 라마" },
+  { text: "성공한 사람들은 어떤 상황에서도 기회를 찾는다.", author: "윈스턴 처칠" },
+  { text: "자신을 믿는 자만이 다른 사람을 이끌 수 있다.", author: "빌 게이츠" },
+  { text: "100번 중 99번 실패해도, 1번의 성공이 모든 것을 바꾼다.", author: "일론 머스크" },
+  { text: "끊임없이 의심받는 것이 성장의 원동력이다.", author: "소크라테스" },
+  { text: "가장 빠른 길은 올바른 방향으로 가는 길이다.", author: "마하트마 간디" },
+  { text: "탁월한 결과는 탁월한 사람들에게서 나온다.", author: "잭 웰치" },
+  { text: "모든 성공 뒤에는 희생이 있다.", author: "빈스 롬바르디" },
+  { text: "먼저 인격을 세워라. 그러면 모든 것이 따라올 것이다.", author: "공자" },
+  { text: "지금 하지 않으면 언제 하겠는가?", author: "팀 페리스" },
+  { text: "나쁜 시장에서 좋은 팀이 나쁜 제품을 구할 수 있다.", author: "마크 안드레센" },
+  { text: "규율은 자유의 어머니다.", author: "아리스토텔레스" },
+  { text: "가장 성공한 사람들은 가장 많이 실패한 사람들이다.", author: "존 맥스웰" },
+  { text: "다른 사람을 통제하기 전에 자기 자신을 먼저 통제하라.", author: "손자" },
+  { text: "비전 없는 전략은 백일몽이고, 전략 없는 비전은 악몽이다.", author: "켄 블랜처드" },
+  { text: "성공하는 사람들은 성공에 대해 이야기하는 대신 행동한다.", author: "레오나르도 다 빈치" },
+  { text: "한 사람이 가는 방향이 팀의 방향이 된다.", author: "피터 드러커" },
+  { text: "당신이 어떤 사람인지는 당신이 어떻게 행동하느냐에 달려 있다.", author: "아리스토텔레스" },
+  { text: "가장 위험한 것은 변화 없는 안전함이다.", author: "필 로젠즈바이크" },
+  { text: "일을 잘하는 사람이 아니라, 올바른 일을 하는 사람이 되어라.", author: "피터 드러커" },
+  { text: "시간은 돈보다 더 소중하다. 시간은 되살릴 수 없기 때문이다.", author: "잭 마" },
+  { text: "고통 없이는 얻는 것도 없다.", author: "벤저민 프랭클린" },
+  { text: "사업은 가장 매력적인 예술 형태다.", author: "앤디 워홀" },
+  { text: "훌륭한 경영자는 문제를 찾는 것이 아니라 기회를 찾는다.", author: "피터 드러커" },
+  { text: "원칙 없는 성공은 모래 위에 세운 집과 같다.", author: "워런 버핏" },
+  { text: "진정한 경쟁자는 남이 아닌 어제의 나 자신이다.", author: "마이클 조던" },
+  { text: "어려운 시기가 훌륭한 리더를 만든다.", author: "존 F. 케네디" },
+  { text: "사람은 생각하는 대로 된다.", author: "에픽테토스" },
+  { text: "나는 미래를 예측하는 가장 좋은 방법은 미래를 만드는 것임을 알았다.", author: "앨런 케이" },
+  { text: "불가능이란 노력하지 않는 사람의 사전에나 있는 말이다.", author: "나폴레옹 보나파르트" },
+  { text: "당신의 가장 불행한 고객이 가장 좋은 스승이다.", author: "빌 게이츠" },
+  { text: "조직은 리더의 그림자다.", author: "피터 드러커" },
+  { text: "남보다 두 배 일하지 말고, 남보다 두 배 잘 생각하라.", author: "스마트 워커" },
+  { text: "도전하지 않은 실패보다 도전한 실패가 더 값지다.", author: "스티브 잡스" },
+  { text: "경쟁에서 이기는 것보다 중요한 것은 혁신하는 것이다.", author: "제프 베조스" },
+  { text: "인재를 모아라. 그러면 다음 목표는 저절로 정해진다.", author: "잭 웰치" },
+  { text: "생각의 질이 삶의 질을 결정한다.", author: "마르쿠스 아우렐리우스" },
+  { text: "지금 당신이 있는 곳에서, 지금 가진 것으로, 지금 할 수 있는 일을 하라.", author: "테오도어 루스벨트" },
+  { text: "회사는 제품을 팔지 않는다. 가치관을 판다.", author: "필 나이트" },
+  { text: "느리게 서두르라.", author: "아우구스투스" },
+  { text: "최고의 서비스는 고객이 기대하지 않았던 것을 주는 것이다.", author: "켄 블랜처드" },
+  { text: "빠르게 움직이고 불필요한 것을 부수어라.", author: "마크 저커버그" },
+  { text: "현금흐름이 곧 비즈니스의 혈액이다.", author: "로버트 기요사키" },
+  { text: "규모보다 중요한 것은 방향이다.", author: "피터 드러커" },
+  { text: "절제된 열정이 세상을 바꾼다.", author: "마하트마 간디" },
+  { text: "겸손은 리더의 가장 강력한 무기다.", author: "C.S. 루이스" },
+  { text: "오늘의 결정이 내일의 현실을 만든다.", author: "존 맥스웰" },
+  { text: "직원을 행복하게 하면 직원이 고객을 행복하게 한다.", author: "리처드 브랜슨" },
+  { text: "위대한 전략보다 중요한 것은 위대한 실행이다.", author: "래리 보시디" },
+  { text: "숫자는 거짓말하지 않지만, 거짓말쟁이들이 숫자를 쓴다.", author: "마크 트웨인" },
+  { text: "경영자는 옳은 것을 하고, 관리자는 일을 옳게 한다.", author: "피터 드러커" },
+  { text: "미래는 꿈꾸는 자의 것이다.", author: "엘리너 루스벨트" },
+  { text: "용기는 두려움이 없는 것이 아니라 두려움보다 중요한 무언가가 있다는 판단이다.", author: "넬슨 만델라" },
+  { text: "지금 어렵다고 느껴진다면, 당신이 성장하고 있다는 증거다.", author: "C.S. 루이스" },
+  { text: "승자는 단념하지 않고, 단념하는 자는 승리하지 못한다.", author: "빈스 롬바르디" },
+  { text: "나는 실패한 것이 아니다. 작동하지 않는 만 가지 방법을 발견한 것이다.", author: "토머스 에디슨" },
+  { text: "사람들이 당신을 믿는다면 그들은 당신에게 기회를 줄 것이다.", author: "존 맥스웰" },
+  { text: "돈은 일한 결과일 뿐, 목적이 되어선 안 된다.", author: "헨리 포드" },
+  { text: "기업의 목적은 가치를 창출하는 것이다.", author: "피터 드러커" },
+  { text: "좋은 판단력은 경험에서 오고, 경험은 나쁜 판단력에서 온다.", author: "마크 트웨인" },
+  { text: "행동하는 것이 불확실성을 줄이는 가장 좋은 방법이다.", author: "제프 베조스" },
+  { text: "도전하지 않는 자에게 기적은 없다.", author: "잭 마" },
+  { text: "탁월함을 추구하면 성공이 따라온다. 성공을 추구하면 탁월함을 놓친다.", author: "란초 샴알다스" }
+];
+
+function getQuoteOfTheDay() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  return quotes[dayOfYear % quotes.length];
+}
+
+function formatDate(date) {
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  return `${date.getFullYear()}년 ${date.getMonth()+1}월 ${date.getDate()}일 ${days[date.getDay()]}요일`;
+}
+
+const today = new Date();
+const q = getQuoteOfTheDay();
+
+document.getElementById('quote-text').textContent = q.text;
+document.getElementById('quote-author').textContent = q.author;
+document.getElementById('today-date').textContent = formatDate(today);
+</script>
+</body>
+</html>
